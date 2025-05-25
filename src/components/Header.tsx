@@ -21,7 +21,7 @@ const Header = () => {
     <header className="sticky top-0 bg-white z-50 shadow-sm">
       {/* Top announcement bar */}
       <div className="bg-lavender py-2 px-4 text-center text-sm">
-        <p>Free shipping on orders over $50 | Use code WELCOME15 for 15% off your first order</p>
+        <p>Free shipping on orders over 2500 | Use code WELCOME15 for 15% off your first order</p>
       </div>
       
       <div className="container mx-auto py-4 px-4">
