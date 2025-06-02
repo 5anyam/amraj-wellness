@@ -1,13 +1,18 @@
+
 import React, { useState } from 'react';
-import { Heart, Menu, Search, ShoppingCart, User, X } from 'lucide-react';
+import { Heart, Menu, Search, ShoppingCart, User, X, Sun, Moon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '@/context/CartContext';
+import { useTheme } from '@/context/ThemeContext';
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const { getCartCount } = useCart();
+  const { theme, toggleTheme } = useTheme();
+  const navigate = useNavigate();
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
@@ -17,11 +22,20 @@ const Header = () => {
     setSearchOpen(!searchOpen);
   };
 
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/shop?search=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchOpen(false);
+      setSearchQuery('');
+    }
+  };
+
   return (
-    <header className="sticky top-0 bg-white z-50 shadow-sm">
+    <header className="sticky top-0 bg-background border-b z-50 shadow-sm">
       {/* Top announcement bar */}
-      <div className="bg-lavender py-2 px-4 text-center text-sm">
-        <p>Free shipping on orders over 2500 | Use code WELCOME15 for 15% off your first order</p>
+      <div className="bg-gradient-to-r from-orange-400 to-teal-400 py-2 px-4 text-center text-sm text-white">
+        <p>Free shipping on orders over ₹500 | Use code WELCOME15 for 15% off your first order</p>
       </div>
       
       <div className="container mx-auto py-4 px-4">
@@ -33,7 +47,13 @@ const Header = () => {
           
           {/* Logo */}
           <div className="flex-1 md:flex-none text-center md:text-left">
-            <Link to="/" className="text-2xl font-bold">Amraj</Link>
+            <Link to="/" className="flex items-center justify-center md:justify-start">
+              <img 
+                src="/lovable-uploads/62e36359-bbd2-4212-a016-0d25dd089ece.png" 
+                alt="Amraj Logo" 
+                className="h-16 w-auto"
+              />
+            </Link>
           </div>
           
           {/* Desktop navigation */}
@@ -47,8 +67,11 @@ const Header = () => {
           
           {/* Icons */}
           <div className="flex items-center space-x-4">
+            <Button variant="ghost" size="icon" onClick={toggleTheme} aria-label="Toggle theme">
+              {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            </Button>
             <Button variant="ghost" size="icon" onClick={toggleSearch} aria-label="Search">
-              <Search className="h-8 w-8" />
+              <Search className="h-5 w-5" />
             </Button>
             <Link to="/wishlist" className="hidden sm:inline-flex">
               <Button variant="ghost" size="icon" aria-label="Wishlist">
@@ -75,30 +98,32 @@ const Header = () => {
         
         {/* Search overlay */}
         {searchOpen && (
-          <div className="absolute inset-0 bg-white p-4 z-50 flex flex-col">
+          <div className="absolute inset-0 bg-background p-4 z-50 flex flex-col">
             <div className="flex justify-between items-center mb-4">
               <span className="text-xl font-medium">Search Products</span>
               <Button variant="ghost" size="icon" onClick={toggleSearch} aria-label="Close search">
                 <X className="h-6 w-6" />
               </Button>
             </div>
-            <div className="border border-gray-300 h-14 rounded-md flex overflow-hidden">
+            <form onSubmit={handleSearch} className="border border-border rounded-md flex overflow-hidden">
               <input
                 type="text"
                 placeholder="Search for products..."
-                className="flex-1 px-4 py-4 outline-none"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="flex-1 px-4 py-2 outline-none bg-background text-foreground"
                 autoFocus
               />
-              <Button className="rounded-none px-4">
+              <Button type="submit" className="rounded-none px-4">
                 <Search className="h-5 w-5" />
               </Button>
-            </div>
+            </form>
           </div>
         )}
         
         {/* Mobile menu */}
         {mobileMenuOpen && (
-          <div className="fixed inset-0 bg-white z-50 p-4 flex flex-col md:hidden animate-fade-in">
+          <div className="fixed inset-0 bg-background z-50 p-4 flex flex-col md:hidden animate-fade-in">
             <div className="flex justify-between items-center mb-6">
               <span className="text-xl font-medium">Menu</span>
               <Button variant="ghost" size="icon" onClick={toggleMobileMenu} aria-label="Close menu">

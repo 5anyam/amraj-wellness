@@ -41,7 +41,7 @@ const Preloader: React.FC<PreloaderProps> = ({ children }) => {
       <AnimatePresence>
         {loading && (
           <motion.div 
-            className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-r from-blue-900 to-teal-800"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-r from-orange-100 to-teal-100 dark:from-orange-900 dark:to-teal-900"
             initial={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
@@ -58,15 +58,24 @@ const Preloader: React.FC<PreloaderProps> = ({ children }) => {
               }}
               className="relative flex items-center justify-center"
             >
-              {/* Logo in preloader - updated to Amraj */}
-              <div className="relative z-10 text-3xl font-bold text-white gradient-text animate-glow">
-                AMRAJ
-                <div className="text-sm text-center font-normal text-cyan mt-1">Nutrition</div>
-              </div>
+              {/* Your logo in preloader */}
+              <motion.img
+                src="/lovable-uploads/62e36359-bbd2-4212-a016-0d25dd089ece.png"
+                alt="Amraj Logo"
+                className="h-24 w-auto z-10"
+                animate={{
+                  scale: [1, 1.1, 1],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              />
               
-              {/* Animated circles with futuristic look */}
+              {/* Animated circles with brand colors */}
               <motion.div 
-                className="absolute w-24 h-24 rounded-full border-4 border-blue-400 opacity-70"
+                className="absolute w-32 h-32 rounded-full border-4 border-orange-400 opacity-70"
                 animate={{ 
                   scale: [1, 1.5, 1],
                 }}
@@ -77,7 +86,7 @@ const Preloader: React.FC<PreloaderProps> = ({ children }) => {
                 }}
               />
               <motion.div 
-                className="absolute w-32 h-32 rounded-full border-2 border-teal-300 opacity-40"
+                className="absolute w-40 h-40 rounded-full border-2 border-teal-300 opacity-40"
                 animate={{ 
                   scale: [1.2, 1.7, 1.2],
                 }}

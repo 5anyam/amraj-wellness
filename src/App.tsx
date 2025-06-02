@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { CartProvider } from "@/context/CartContext";
+import { ThemeProvider } from "@/context/ThemeContext";
 import Preloader from "@/components/Preloader";
 import { useEffect } from "react";
 
@@ -36,12 +37,12 @@ const ScrollToTop = ({ children }) => {
 
 const AppRoutes = () => {
   return (
-    <ScrollToTop>
-      <Preloader>
+    <Preloader>
+      <ScrollToTop>
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/shop" element={<ShopPage />} />
-          <Route path="/product/:id" element={<ProductPage />} />
+          <Route path="/product/:slug" element={<ProductPage />} />
           <Route path="/cart" element={<CartPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/order-confirmation/:orderId" element={<OrderConfirmationPage />} />
@@ -50,8 +51,8 @@ const AppRoutes = () => {
           <Route path="/about" element={<AboutPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </Preloader>
-    </ScrollToTop>
+      </ScrollToTop>
+    </Preloader>
   );
 };
 
@@ -59,13 +60,15 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <HelmetProvider>
       <TooltipProvider>
-        <CartProvider>
-          <BrowserRouter>
-            <Toaster />
-            <Sonner />
-            <AppRoutes />
-          </BrowserRouter>
-        </CartProvider>
+        <ThemeProvider>
+          <CartProvider>
+            <BrowserRouter>
+              <Toaster />
+              <Sonner />
+              <AppRoutes />
+            </BrowserRouter>
+          </CartProvider>
+        </ThemeProvider>
       </TooltipProvider>
     </HelmetProvider>
   </QueryClientProvider>

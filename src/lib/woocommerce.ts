@@ -39,9 +39,9 @@ interface WooCommerceCategory {
 
 // Configuration for WooCommerce REST API
 export const WC_API_CONFIG = {
-  url: "https://cms.amraj.in",
-  consumerKey: "ck_3a5e17baf0a5cd4299fb075e55fb8ebdd1997d55",
-  consumerSecret: "cs_86265282c15328e3210e57ac1116bbc130c25799",
+  url: "https://atulyamedilinkpvtltd.shop",
+  consumerKey: "ck_85e8cd528fe7cc01b4776563635dcfdd1d4816d8",
+  consumerSecret: "cs_2caab97bdc119fd281bbc1a28e7b2c9692d0667f",
   version: "wc/v3"
 };
 

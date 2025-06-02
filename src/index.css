@@ -14,13 +14,13 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    /* Changed primary from pink to blue */
-    --primary: 210 100% 60%;
-    --primary-foreground: 210 10% 20%;
+    /* Changed primary to orange theme */
+    --primary: 22 100% 52%;
+    --primary-foreground: 22 10% 20%;
 
-    /* Changed secondary from mint to teal */
-    --secondary: 180 70% 50%;
-    --secondary-foreground: 180 10% 20%;
+    /* Changed secondary to teal theme */
+    --secondary: 172 85% 38%;
+    --secondary-foreground: 172 10% 20%;
 
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
@@ -48,13 +48,13 @@
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
 
-    /* Changed primary from pink to blue */
-    --primary: 210 100% 60%;
-    --primary-foreground: 210 10% 20%;
+    /* Changed primary to orange theme */
+    --primary: 22 100% 52%;
+    --primary-foreground: 22 10% 20%;
 
-    /* Changed secondary from mint to teal */
-    --secondary: 180 70% 50%;
-    --secondary-foreground: 180 10% 20%;
+    /* Changed secondary to teal theme */
+    --secondary: 172 85% 38%;
+    --secondary-foreground: 172 10% 20%;
 
     --muted: 217.2 32.6% 17.5%;
     --muted-foreground: 215 20.2% 65.1%;
@@ -106,7 +106,7 @@
   }
 
   .link-hover:after {
-    @apply content-[''] absolute left-0 bottom-0 w-0 h-0.5 bg-primary transition-all duration-300 ease-in-out;
+    @apply content-[''] absolute left-0 bottom-0 w-0 h-0.5 bg-gradient-to-r from-orange-500 to-teal-500 transition-all duration-300 ease-in-out;
   }
 
   .link-hover:hover:after {
@@ -114,19 +114,19 @@
   }
 }
 
-/* Product card hover effect with futuristic glass morphism */
+/* Product card hover effect with new brand colors */
 .product-card {
   @apply transition duration-300 ease-in-out backdrop-blur-sm border-[0.5px] border-opacity-30;
 }
 
 .product-card:hover {
-  @apply shadow-lg transform -translate-y-1 bg-gradient-to-br from-white/30 to-white/10 border-white/30;
+  @apply shadow-lg transform -translate-y-1 bg-gradient-to-br from-orange-50/30 to-teal-50/30 border-orange-200/30;
 }
 
 /* Custom loading spinner */
 .spinner {
   @apply h-10 w-10 rounded-full border-4 border-t-primary animate-spin;
-  border-top-color: theme('colors.primary.DEFAULT');
+  border-top-color: theme('colors.orange.500');
 }
 
 @keyframes pulse {
@@ -142,24 +142,23 @@
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
-/* Futuristic additions */
+/* Updated glass card with brand colors */
 .glass-card {
-  @apply bg-white/10 backdrop-blur-md border border-white/20 shadow-xl;
+  @apply bg-white/10 backdrop-blur-md border border-orange-200/20 shadow-xl;
 }
 
 .neo-glow {
-  box-shadow: 0 0 15px rgba(0, 194, 255, 0.5), 0 0 30px rgba(0, 187, 255, 0.3);
+  box-shadow: 0 0 15px rgba(249, 115, 22, 0.5), 0 0 30px rgba(20, 184, 166, 0.3);
 }
 
 .text-glow {
-  text-shadow: 0 0 10px rgba(0, 153, 255, 0.7);
+  text-shadow: 0 0 10px rgba(249, 115, 22, 0.7);
 }
 
 .gradient-text {
-  @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-teal-400;
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-teal-500;
 }
 
 .futuristic-border {
-  @apply border border-blue-500/30 rounded-lg p-4 bg-gradient-to-r from-blue-500/10 to-teal-400/10;
+  @apply border border-orange-500/30 rounded-lg p-4 bg-gradient-to-r from-orange-500/10 to-teal-500/10;
 }
-

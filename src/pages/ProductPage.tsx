@@ -1,9 +1,9 @@
-
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { getProduct } from '@/lib/api';
 import { Product } from '@/components/ProductCard';
+import { createProductSlug } from '@/lib/slugUtils';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
@@ -23,7 +23,8 @@ const DISCOUNT_TIERS = [
 ];
 
 const ProductPage = () => {
-  const { id } = useParams<{ id: string }>();
+  const { slug } = useParams<{ slug: string }>();
+  const navigate = useNavigate();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [quantity, setQuantity] = useState<number>(1);
@@ -36,17 +37,25 @@ const ProductPage = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       setLoading(true);
-      if (id) {
-        const fetchedProduct = await getProduct(Number(id));
-        setProduct(fetchedProduct);
-        setFinalPrice(fetchedProduct?.price || 0);
+      if (slug) {
+        const fetchedProduct = await getProduct(slug);
+        if (fetchedProduct) {
+          setProduct(fetchedProduct);
+          setFinalPrice(fetchedProduct.price);
+          
+          // Update URL to canonical slug format if needed
+          const canonicalSlug = createProductSlug(fetchedProduct);
+          if (slug !== canonicalSlug) {
+            navigate(`/product/${canonicalSlug}`, { replace: true });
+          }
+        }
         window.scrollTo(0, 0);
       }
       setLoading(false);
     };
     
     fetchProduct();
-  }, [id]);
+  }, [slug, navigate]);
   
   // Update discount based on quantity changes
   useEffect(() => {
@@ -168,8 +177,9 @@ const ProductPage = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <Helmet>
-        <title>{product.name} | Amraj Nutrition</title>
-        <meta name="description" content={product.short_description || `${product.name} - Health supplements for your wellbeing`} />
+        <title>{product?.name} | Amraj Nutrition</title>
+        <meta name="description" content={product?.short_description || `${product?.name} - Health supplements for your wellbeing`} />
+        <link rel="canonical" href={`${window.location.origin}/product/${product ? createProductSlug(product) : slug}`} />
       </Helmet>
       
       <Header />
@@ -198,19 +208,19 @@ const ProductPage = () => {
               <h1 className="text-3xl font-bold mb-4 gradient-text">{product.name}</h1>
               
               <div className="flex items-baseline gap-3 mb-6">
-                <span className="text-2xl font-bold text-blue-600">₹{finalPrice.toFixed(2)}</span>
+                <span className="text-2xl font-bold text-primary">₹{finalPrice.toFixed(2)}</span>
                 
                 {hasDiscount && (
                   <>
-                    <span className="text-gray-500 line-through">₹{product.regular_price?.toFixed(2)}</span>
-                    <Badge className="bg-gradient-to-r from-blue-600 to-teal-500">
+                    <span className="text-muted-foreground line-through">₹{product.regular_price?.toFixed(2)}</span>
+                    <Badge className="bg-gradient-to-r from-orange-500 to-teal-500">
                       {regularDiscountPercentage}% OFF
                     </Badge>
                   </>
                 )}
 
                 {offerActive && (
-                  <Badge className="bg-gradient-to-r from-teal-500 to-blue-600 ml-2 animate-pulse">
+                  <Badge className="bg-gradient-to-r from-teal-500 to-orange-500 ml-2 animate-pulse">
                     <Percent className="w-3 h-3 mr-1" />
                     {discountPercent}% Subscription Discount
                   </Badge>
@@ -218,14 +228,14 @@ const ProductPage = () => {
               </div>
               
               {product.short_description && (
-                <div className="prose mb-8">
+                <div className="prose mb-8 text-foreground">
                   <div dangerouslySetInnerHTML={createMarkup(product.short_description)} />
                 </div>
               )}
 
               {/* Enhanced Subscription Option with Better Design */}
-              <div className="mb-8 bg-gradient-to-r from-blue-50 to-teal-50 rounded-lg overflow-hidden shadow-md">
-                <div className="px-4 py-3 bg-blue-600 text-white">
+              <div className="mb-8 bg-gradient-to-r from-orange-50 to-teal-50 dark:from-orange-950/20 dark:to-teal-950/20 rounded-lg overflow-hidden shadow-md">
+                <div className="px-4 py-3 bg-gradient-to-r from-orange-500 to-teal-500 text-white">
                   <div className="flex items-center">
                     <Gift className="w-5 h-5 mr-2" />
                     <h3 className="font-semibold">Choose Supply Duration & Save</h3>
@@ -236,7 +246,7 @@ const ProductPage = () => {
                   <div className="grid grid-cols-5 gap-3">
                     <Button 
                       variant={selectedMonths === 1 ? "default" : "outline"} 
-                      className={`relative h-auto py-3 transition-all duration-300 ${selectedMonths === 1 ? "bg-gradient-to-r from-blue-600 to-teal-500 shadow-md" : ""}`}
+                      className={`relative h-auto py-3 transition-all duration-300 ${selectedMonths === 1 ? "bg-gradient-to-r from-orange-500 to-teal-500 shadow-md" : "hover:bg-orange-50 dark:hover:bg-orange-950/20"}`}
                       onClick={() => handleSupplyDurationChange(1)}
                     >
                       <div className="flex flex-col items-center">
@@ -252,13 +262,13 @@ const ProductPage = () => {
                     
                     <Button 
                       variant={selectedMonths === 2 ? "default" : "outline"}
-                      className={`relative h-auto py-3 transition-all duration-300 ${selectedMonths === 2 ? "bg-gradient-to-r from-blue-600 to-teal-500 shadow-md" : "hover:bg-blue-50"}`}
+                      className={`relative h-auto py-3 transition-all duration-300 ${selectedMonths === 2 ? "bg-gradient-to-r from-orange-500 to-teal-500 shadow-md" : "hover:bg-orange-50 dark:hover:bg-orange-950/20"}`}
                       onClick={() => handleSupplyDurationChange(2)}
                     >
                       <div className="flex flex-col items-center">
                         <Calendar className="w-5 h-5 mb-1" />
                         <span className="text-xs md:text-sm font-medium">2 Months</span>
-                        <Badge className="mt-1 bg-blue-500/20 text-blue-700 border-0 text-xs">
+                        <Badge className="mt-1 bg-orange-500/20 text-orange-700 dark:text-orange-300 border-0 text-xs">
                           Save 10%
                         </Badge>
                         {selectedMonths === 2 && (
@@ -271,13 +281,13 @@ const ProductPage = () => {
                     
                     <Button 
                       variant={selectedMonths >= 3 && selectedMonths <= 3 ? "default" : "outline"}
-                      className={`relative h-auto py-3 transition-all duration-300 ${selectedMonths >= 3 && selectedMonths <= 3 ? "bg-gradient-to-r from-blue-600 to-teal-500 shadow-md" : "hover:bg-teal-50"}`}
+                      className={`relative h-auto py-3 transition-all duration-300 ${selectedMonths >= 3 && selectedMonths <= 3 ? "bg-gradient-to-r from-orange-500 to-teal-500 shadow-md" : "hover:bg-teal-50 dark:hover:bg-teal-950/20"}`}
                       onClick={() => handleSupplyDurationChange(3)}
                     >
                       <div className="flex flex-col items-center">
                         <Calendar className="w-5 h-5 mb-1" />
                         <span className="text-xs md:text-sm font-medium">3 Months</span>
-                        <Badge className="mt-1 bg-teal-500/20 text-teal-700 border-0 text-xs">
+                        <Badge className="mt-1 bg-teal-500/20 text-teal-700 dark:text-teal-300 border-0 text-xs">
                           Save 15%
                         </Badge>
                         {selectedMonths >= 3 && selectedMonths <= 3 && (
@@ -290,13 +300,13 @@ const ProductPage = () => {
                     
                     <Button 
                       variant={selectedMonths >= 4 && selectedMonths <= 4 ? "default" : "outline"}
-                      className={`relative h-auto py-3 transition-all duration-300 ${selectedMonths >= 4 && selectedMonths <= 4 ? "bg-gradient-to-r from-blue-600 to-teal-500 shadow-md" : "hover:bg-teal-50"}`}
+                      className={`relative h-auto py-3 transition-all duration-300 ${selectedMonths >= 4 && selectedMonths <= 4 ? "bg-gradient-to-r from-orange-500 to-teal-500 shadow-md" : "hover:bg-teal-50 dark:hover:bg-teal-950/20"}`}
                       onClick={() => handleSupplyDurationChange(4)}
                     >
                       <div className="flex flex-col items-center">
                         <Calendar className="w-5 h-5 mb-1" />
                         <span className="text-xs md:text-sm font-medium">4 Months</span>
-                        <Badge className="mt-1 bg-teal-500/20 text-teal-700 border-0 text-xs">
+                        <Badge className="mt-1 bg-teal-500/20 text-teal-700 dark:text-teal-300 border-0 text-xs">
                           Save 15%
                         </Badge>
                         {selectedMonths >= 4 && selectedMonths <= 4 && (
@@ -309,13 +319,13 @@ const ProductPage = () => {
                     
                     <Button 
                       variant={selectedMonths >= 5 ? "default" : "outline"}
-                      className={`relative h-auto py-3 transition-all duration-300 ${selectedMonths >= 5 ? "bg-gradient-to-r from-blue-600 to-teal-500 shadow-md" : "hover:bg-teal-50"}`}
+                      className={`relative h-auto py-3 transition-all duration-300 ${selectedMonths >= 5 ? "bg-gradient-to-r from-orange-500 to-teal-500 shadow-md" : "hover:bg-teal-50 dark:hover:bg-teal-950/20"}`}
                       onClick={() => handleSupplyDurationChange(5)}
                     >
                       <div className="flex flex-col items-center">
                         <Calendar className="w-5 h-5 mb-1" />
                         <span className="text-xs md:text-sm font-medium">5+ Months</span>
-                        <Badge className="mt-1 bg-teal-500/20 text-teal-700 border-0 text-xs">
+                        <Badge className="mt-1 bg-teal-500/20 text-teal-700 dark:text-teal-300 border-0 text-xs">
                           Save 15%
                         </Badge>
                         {selectedMonths >= 5 && (
@@ -328,22 +338,22 @@ const ProductPage = () => {
                   </div>
                   
                   {offerActive ? (
-                    <div className="mt-4 bg-gradient-to-r from-blue-100/50 to-teal-100/50 p-3 rounded-md flex items-center">
-                      <div className="bg-gradient-to-r from-blue-600 to-teal-500 rounded-full p-2 mr-3">
+                    <div className="mt-4 bg-gradient-to-r from-orange-100/50 to-teal-100/50 dark:from-orange-950/30 dark:to-teal-950/30 p-3 rounded-md flex items-center">
+                      <div className="bg-gradient-to-r from-orange-500 to-teal-500 rounded-full p-2 mr-3">
                         <Gift className="w-4 h-4 text-white" />
                       </div>
                       <div>
-                        <p className="font-medium text-blue-800">
-                          <span className="text-teal-600 font-bold">{discountPercent}% discount</span> applied to your {quantity} month supply!
+                        <p className="font-medium text-orange-800 dark:text-orange-200">
+                          <span className="text-teal-600 dark:text-teal-400 font-bold">{discountPercent}% discount</span> applied to your {quantity} month supply!
                         </p>
-                        <p className="text-sm text-blue-700 mt-1">
+                        <p className="text-sm text-orange-700 dark:text-orange-300 mt-1">
                           You're saving ₹{((product.price * quantity) - (finalPrice * quantity)).toFixed(2)}
                         </p>
                       </div>
                     </div>
                   ) : (
-                    <div className="mt-4 bg-blue-50 p-3 rounded-md text-sm text-blue-700 flex items-center">
-                      <Tag className="w-4 h-4 mr-2 text-blue-600" />
+                    <div className="mt-4 bg-orange-50 dark:bg-orange-950/20 p-3 rounded-md text-sm text-orange-700 dark:text-orange-300 flex items-center">
+                      <Tag className="w-4 h-4 mr-2 text-orange-600 dark:text-orange-400" />
                       <p>Choose a multi-month supply above and save up to 15% on your purchase!</p>
                     </div>
                   )}
@@ -352,11 +362,11 @@ const ProductPage = () => {
               
               <div className="mb-6">
                 <div className="flex items-center justify-between mb-3">
-                  <label htmlFor="quantity" className="font-medium text-gray-700">
+                  <label htmlFor="quantity" className="font-medium text-foreground">
                     Quantity
                   </label>
                   {offerActive && (
-                    <span className="text-sm text-blue-600">
+                    <span className="text-sm text-primary">
                       Subscription quantity: {quantity}
                     </span>
                   )}
@@ -365,7 +375,7 @@ const ProductPage = () => {
                 <div className="flex items-center">
                   <button
                     type="button"
-                    className="px-4 py-2 border border-gray-300 rounded-l-md bg-gray-50 hover:bg-gray-100 transition-colors"
+                    className="px-4 py-2 border border-border rounded-l-md bg-muted hover:bg-muted/80 transition-colors text-foreground"
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
                   >
                     -
@@ -377,11 +387,11 @@ const ProductPage = () => {
                     min="1"
                     value={quantity}
                     onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
-                    className="w-16 text-center border-y border-gray-300 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="w-16 text-center border-y border-border py-2 focus:outline-none focus:ring-1 focus:ring-primary bg-background text-foreground"
                   />
                   <button
                     type="button"
-                    className="px-4 py-2 border border-gray-300 rounded-r-md bg-gray-50 hover:bg-gray-100 transition-colors"
+                    className="px-4 py-2 border border-border rounded-r-md bg-muted hover:bg-muted/80 transition-colors text-foreground"
                     onClick={() => setQuantity(quantity + 1)}
                   >
                     +
@@ -389,7 +399,7 @@ const ProductPage = () => {
                 </div>
                 
                 {quantity !== selectedMonths && selectedMonths > 1 && (
-                  <p className="text-xs text-amber-600 mt-2">
+                  <p className="text-xs text-amber-600 dark:text-amber-400 mt-2">
                     Note: Changing quantity may adjust your subscription discount.
                   </p>
                 )}
@@ -398,7 +408,7 @@ const ProductPage = () => {
               <Button 
                 onClick={handleAddToCart} 
                 size="lg" 
-                className="w-full bg-gradient-to-r from-blue-600 to-teal-500 hover:from-blue-700 hover:to-teal-600 transition-all hover:shadow-lg py-6 text-lg"
+                className="w-full bg-gradient-to-r from-orange-500 to-teal-500 hover:from-orange-600 hover:to-teal-600 transition-all hover:shadow-lg py-6 text-lg"
               >
                 <ShoppingCart className="mr-2 h-5 w-5" /> 
                 Add to Cart
@@ -414,22 +424,22 @@ const ProductPage = () => {
                 </TabsList>
                 <TabsContent value="description" className="pt-6">
                   {product.description ? (
-                    <div className="prose max-w-none" dangerouslySetInnerHTML={createMarkup(product.description)} />
+                    <div className="prose max-w-none text-foreground" dangerouslySetInnerHTML={createMarkup(product.description)} />
                   ) : (
-                    <p className="text-gray-500">No description available.</p>
+                    <p className="text-muted-foreground">No description available.</p>
                   )}
                 </TabsContent>
                 <TabsContent value="additional" className="pt-6">
                   <div className="space-y-4">
                     {product.tag && (
                       <div className="grid grid-cols-3">
-                        <span className="text-gray-600">Tags:</span>
-                        <span className="col-span-2">{product.tag}</span>
+                        <span className="text-muted-foreground">Tags:</span>
+                        <span className="col-span-2 text-foreground">{product.tag}</span>
                       </div>
                     )}
                     <div className="grid grid-cols-3">
-                      <span className="text-gray-600">Category:</span>
-                      <span className="col-span-2">{product.category || 'Uncategorized'}</span>
+                      <span className="text-muted-foreground">Category:</span>
+                      <span className="col-span-2 text-foreground">{product.category || 'Uncategorized'}</span>
                     </div>
                   </div>
                 </TabsContent>

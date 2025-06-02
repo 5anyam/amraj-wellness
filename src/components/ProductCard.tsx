@@ -1,9 +1,9 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
+import { createProductSlug } from '@/lib/slugUtils';
 
 // Export the Product interface so it can be used by other components
 export interface Product {
@@ -33,6 +33,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
   const hasDiscount = discountPercentage > 0;
 
+  const productSlug = createProductSlug(product);
+
   return (
     <motion.div
       whileHover={{ y: -5 }}
@@ -46,7 +48,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             {discountPercentage}% OFF
           </Badge>
         )}
-        <Link to={`/product/${product.id}`}>
+        <Link to={`/product/${productSlug}`}>
           <div className="aspect-w-4 aspect-h-3 bg-gradient-to-b from-white/50 to-blue-50/30 overflow-hidden">
             <motion.img
               src={product.image}

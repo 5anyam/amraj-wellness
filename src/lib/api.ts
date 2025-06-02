@@ -1,5 +1,5 @@
-
 import { Product } from '@/components/ProductCard';
+import { generateSlug } from './slugUtils';
 import { 
   fetchWooCommerceProducts,
   fetchWooCommerceProduct,
@@ -12,7 +12,7 @@ import {
 } from './woocommerce';
 
 // Define the WooCommerce REST API endpoint
-const BASE_URL = 'https://cms.amraj.in/wp-json/wc/v3';
+const BASE_URL = 'https://atulyamedilinkpvtltd.shop/wp-json/wc/v3';
 
 // Interface for API response formats
 interface PaginatedResponse<T> {
@@ -28,10 +28,25 @@ export const getProducts = async (): Promise<Product[]> => {
   return fetchWooCommerceProducts();
 };
 
-// Function to fetch a single product by ID
-export const getProduct = async (id: number): Promise<Product | null> => {
+// Function to fetch a single product by slug or ID
+export const getProduct = async (slugOrId: string | number): Promise<Product | null> => {
+  let productId: number;
+  
+  if (typeof slugOrId === 'string') {
+    // If it's a string slug, try to find product by name match
+    const products = await fetchWooCommerceProducts();
+    const product = products.find(p => 
+      slugOrId === generateSlug(p.name) || 
+      slugOrId.includes(generateSlug(p.name))
+    );
+    if (!product) return null;
+    productId = product.id;
+  } else {
+    productId = slugOrId;
+  }
+  
   // Use WooCommerce API to fetch single product
-  return fetchWooCommerceProduct(id);
+  return fetchWooCommerceProduct(productId);
 };
 
 // Function to fetch products by category
