@@ -6,7 +6,7 @@ import { ArrowRight } from 'lucide-react';
 
 const Hero = () => {
   return (
-    <section className="relative bg-gradient-to-br from-orange-50 via-background to-teal-50 dark:from-orange-950/20 dark:via-background dark:to-teal-950/20 overflow-hidden">
+    <section className="relative bg-orange-50 dark:bg-orange-950/20 overflow-hidden">
       <div className="container mx-auto px-4 py-16 md:py-24">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div className="max-w-lg">
@@ -20,12 +20,12 @@ const Hero = () => {
               Our products are made with science-backed ingredients. Raw from certified sources that meet the highest standards.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button asChild size="lg" className="bg-gradient-to-r from-orange-500 to-teal-500 hover:from-orange-600 hover:to-teal-600">
+              <Button asChild size="lg" className="bg-orange-500 hover:bg-orange-600">
                 <Link to="/shop">
                   Shop now <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
-              <Button variant="outline" size="lg" asChild className="border-orange-500 text-orange-600 hover:bg-orange-50 dark:hover:bg-orange-950/20">
+              <Button variant="outline" size="lg" asChild className="border-teal-500 text-teal-600 hover:bg-teal-50 dark:hover:bg-teal-950/20">
                 <Link to="/about">
                   Learn more
                 </Link>

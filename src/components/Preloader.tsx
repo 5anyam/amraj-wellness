@@ -41,7 +41,7 @@ const Preloader: React.FC<PreloaderProps> = ({ children }) => {
       <AnimatePresence>
         {loading && (
           <motion.div 
-            className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-r from-orange-100 to-teal-100 dark:from-orange-900 dark:to-teal-900"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-orange-100 dark:bg-orange-900"
             initial={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}

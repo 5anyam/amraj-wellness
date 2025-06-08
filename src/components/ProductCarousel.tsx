@@ -1,7 +1,9 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { motion } from 'framer-motion';
+import useEmblaCarousel from 'embla-carousel-react';
+import Autoplay from 'embla-carousel-autoplay';
 
 const ProductCarousel = () => {
   const products = [
@@ -25,17 +27,30 @@ const ProductCarousel = () => {
     }
   ];
 
+  const autoplayOptions = {
+    delay: 4000,
+    stopOnInteraction: false,
+    stopOnMouseEnter: true,
+  };
+
   return (
-    <section className="py-16 bg-gradient-to-br from-orange-50 via-white to-teal-50">
+    <section className="py-16 bg-orange-50 dark:bg-orange-950/10">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-orange-600 to-teal-600 bg-clip-text text-transparent">
+          <h2 className="text-4xl font-bold mb-4 text-orange-600">
             Premium Health Solutions
           </h2>
-          <p className="text-lg text-gray-600">Science-backed supplements for your wellness journey</p>
+          <p className="text-lg text-teal-700 dark:text-teal-300">Science-backed supplements for your wellness journey</p>
         </div>
         
-        <Carousel className="w-full max-w-5xl mx-auto">
+        <Carousel 
+          className="w-full max-w-5xl mx-auto"
+          plugins={[Autoplay(autoplayOptions)]}
+          opts={{
+            align: "start",
+            loop: true,
+          }}
+        >
           <CarouselContent>
             {products.map((product) => (
               <CarouselItem key={product.id}>
@@ -45,17 +60,17 @@ const ProductCarousel = () => {
                   transition={{ duration: 0.6 }}
                   className="p-4"
                 >
-                  <div className="bg-white rounded-xl shadow-xl overflow-hidden">
-                    <div className="aspect-w-16 aspect-h-9 bg-gradient-to-br from-orange-100 to-teal-100">
+                  <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl overflow-hidden border border-orange-200 dark:border-orange-800">
+                    <div className="aspect-w-16 aspect-h-9 bg-teal-50 dark:bg-teal-950/20">
                       <img
                         src={product.image}
                         alt={product.title}
                         className="w-full h-full object-contain p-8"
                       />
                     </div>
-                    <div className="p-6 text-center bg-gradient-to-r from-orange-50 to-teal-50">
-                      <h3 className="text-2xl font-bold mb-2 text-gray-800">{product.title}</h3>
-                      <p className="text-gray-600">{product.subtitle}</p>
+                    <div className="p-6 text-center bg-orange-50 dark:bg-orange-950/20">
+                      <h3 className="text-2xl font-bold mb-2 text-orange-700 dark:text-orange-300">{product.title}</h3>
+                      <p className="text-teal-600 dark:text-teal-400">{product.subtitle}</p>
                     </div>
                   </div>
                 </motion.div>

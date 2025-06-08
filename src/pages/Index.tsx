@@ -1,13 +1,14 @@
 
 import React from 'react';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import Hero from '@/components/Hero';
+// import Header from '@/components/Header';
+// import Footer from '@/components/Footer';
+// import Hero from '@/components/Hero';
 import ProductCarousel from '@/components/ProductCarousel';
-import NewArrivals from '@/components/NewArrivals';
-import Testimonials from '@/components/Testimonials';
-import InfoBanner from '@/components/InfoBanner';
-import MostSellingProducts from '@/components/MostSellingProducts';
+// import NewArrivals from '@/components/NewArrivals';
+// import Testimonials from '@/components/Testimonials';
+// import InfoBanner from '@/components/InfoBanner';
+// import MostSellingProducts from '@/components/MostSellingProducts';
+import ComingSoon from '@/components/ComingSoon';
 import { Helmet } from 'react-helmet-async';
 
 const Index = () => {
@@ -28,10 +29,14 @@ const Index = () => {
         <link rel="canonical" href="https://amraj.in" />
       </Helmet>
       
+      {/* Coming Soon Page - Remove this component when ready to launch */}
+      <ComingSoon />
+      
+      {/* Uncomment below when ready to launch and remove ComingSoon component above */}
+      {/*
       <Header />
       
       <main className="flex-grow">
-        <Hero />
         <ProductCarousel />
         <InfoBanner />
         <NewArrivals />
@@ -40,6 +45,7 @@ const Index = () => {
       </main>
       
       <Footer />
+      */}
     </div>
   );
 };

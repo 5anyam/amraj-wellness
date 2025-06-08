@@ -34,7 +34,7 @@ const Header = () => {
   return (
     <header className="sticky top-0 bg-background border-b z-50 shadow-sm">
       {/* Top announcement bar */}
-      <div className="bg-gradient-to-r from-orange-400 to-teal-400 py-2 px-4 text-center text-sm text-white">
+      <div className="bg-orange-500 py-2 px-4 text-center text-sm text-white">
         <p>Free shipping on orders over ₹500 | Use code WELCOME15 for 15% off your first order</p>
       </div>
       
