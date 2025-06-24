@@ -1,19 +1,30 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Mail, Star, Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
+import emailjs from 'emailjs-com';
 
 const ComingSoon = () => {
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [isSubscribed, setIsSubscribed] = useState(false);
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
-    if (email) {
+    if (!email || !phone) return;
+
+    emailjs.send(
+      'service_djbxkqp',
+      'template_fswl1w4',
+      { user_email: email, user_phone: phone },
+      'jBYQJ_mBUGbXPqVR3'
+    ).then(() => {
       setIsSubscribed(true);
       setEmail('');
-    }
+      setPhone('');
+    }).catch(() => {
+      alert("Email send failed, try again later.");
+    });
   };
 
   return (
@@ -119,6 +130,14 @@ const ComingSoon = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email address"
+                  className="flex-1 px-4 py-3 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-orange-500 bg-background text-foreground"
+                  required
+                />
+                 <input
+                  type="phone"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="Enter your phone number"
                   className="flex-1 px-4 py-3 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-orange-500 bg-background text-foreground"
                   required
                 />

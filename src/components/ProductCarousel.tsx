@@ -28,23 +28,16 @@ const ProductCarousel = () => {
   ];
 
   const autoplayOptions = {
-    delay: 4000,
+    delay: 3500,
     stopOnInteraction: false,
     stopOnMouseEnter: true,
   };
 
   return (
-    <section className="py-16 bg-orange-50 dark:bg-orange-950/10">
+    <section className="py-2 bg-white dark:bg-black">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold mb-4 text-orange-600">
-            Premium Health Solutions
-          </h2>
-          <p className="text-lg text-teal-700 dark:text-teal-300">Science-backed supplements for your wellness journey</p>
-        </div>
-        
         <Carousel 
-          className="w-full max-w-5xl mx-auto"
+          className="w-full mx-auto"
           plugins={[Autoplay(autoplayOptions)]}
           opts={{
             align: "start",
@@ -65,20 +58,17 @@ const ProductCarousel = () => {
                       <img
                         src={product.image}
                         alt={product.title}
-                        className="w-full h-full object-contain p-8"
+                        className="w-full h-full object-contain p-2"
                       />
                     </div>
-                    <div className="p-6 text-center bg-orange-50 dark:bg-orange-950/20">
-                      <h3 className="text-2xl font-bold mb-2 text-orange-700 dark:text-orange-300">{product.title}</h3>
-                      <p className="text-teal-600 dark:text-teal-400">{product.subtitle}</p>
-                    </div>
+                  
                   </div>
                 </motion.div>
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious className="bg-orange-500 hover:bg-orange-600 text-white border-0" />
-          <CarouselNext className="bg-teal-500 hover:bg-teal-600 text-white border-0" />
+          {/* <CarouselPrevious className="bg-orange-500 hover:bg-orange-600 text-white border-0" />
+          <CarouselNext className="bg-teal-500 hover:bg-teal-600 text-white border-0" /> */}
         </Carousel>
       </div>
     </section>
